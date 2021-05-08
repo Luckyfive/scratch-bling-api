@@ -1,0 +1,26 @@
+{
+  "name": "scratch-bling-api",
+  "version": "1.0.0",
+  "description": "Test project",
+  "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luckyfive/scratch-bling-api.git"
+  },
+  "author": "Andres Garcia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Luckyfive/scratch-bling-api/issues"
+  },
+  "homepage": "https://github.com/Luckyfive/scratch-bling-api#readme"
+}
