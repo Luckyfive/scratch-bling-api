@@ -24,9 +24,13 @@ const updateBackscratcherById = (id, itemName, itemDesc, itemSize, itemCost) =>
     item_size = array [${itemSize}], item_cost = '${itemCost}' where id = ${id} returning *`)
         .then(response => response.rows[0]);
 
+const deleteBackscratcherById = (id) => pool.query(`delete from backscratchers where id = ${id} returning *`)
+    .then(response => response.rows[0]);
+
 module.exports = {
     getAllBackscratchers,
     getBackscratcherById,
     createBackscratcher,
-    updateBackscratcherById
+    updateBackscratcherById,
+    deleteBackscratcherById
 }

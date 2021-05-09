@@ -58,7 +58,10 @@ app.post('/backscratchers', (req, res) => {
         values ('${name}','${description}', array [${readableSizes}], '${price}') returning *`);
         db.createBackscratcher(name, description, readableSizes, price)
             .then((item) => {
-                return res.send(item);
+                return res.send({
+                    "action": "created",
+                    ...item
+                });
             })
             .catch((err) => {
                 // handle errors
@@ -84,7 +87,10 @@ app.put('/backscratchers/:id', async (req, res) => {
             item_size = array [${readableSizes}], item_cost = '${price}' where id = ${id} returning *`);
             db.updateBackscratcherById(id, name, description, readableSizes, price)
                 .then((item) => {
-                    return res.send(item);
+                    return res.send({
+                        "action": "updated",
+                        ...item
+                    });
                 })
                 .catch((err) => {
                     // handle errors
@@ -94,8 +100,28 @@ app.put('/backscratchers/:id', async (req, res) => {
     }
 });
 
-app.delete('/backscratchers', async (req, res) => {
-    return res.send('Received a DELETE HTTP method');
+app.delete('/backscratchers/:id', async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (!id) {
+        return res.status(400).send('Unable to process delete request. Product id must be provided.');
+    }
+    else {
+        db.deleteBackscratcherById(id)
+            .then((item) => {
+                if (!item) {
+                    return res.send('Product id does not exist.');
+                }
+
+                return res.send({
+                    "action": "deleted",
+                    ...item
+                });
+            })
+            .catch((err) => {
+                // handle errors
+                return res.status(400).send(err.message);
+            });
+    }
 });
 
 app.listen(process.env.PORT || 3000, function () {
