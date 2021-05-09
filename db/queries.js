@@ -12,9 +12,15 @@ const getAllBackscratchers = () => pool.query('select * from backscratchers')
     .then(response => response.rows);
 
 const getBackscratcherById = (id) => pool.query(`select * from backscratchers where id = ${id}`)
-    .then(response => response.rows[0])
+    .then(response => response.rows[0]);
+
+const createBackscratcher = (itemName, itemDesc, itemSize, itemCost) =>
+    pool.query(`insert into backscratchers (item_name, item_description, item_size, item_cost)
+    values ('${itemName}','${itemDesc}', array [${itemSize}], '${itemCost}') returning *`)
+    .then(response => response.rows[0]);
 
 module.exports = {
     getAllBackscratchers,
-    getBackscratcherById
+    getBackscratcherById,
+    createBackscratcher
 }
