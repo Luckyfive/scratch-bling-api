@@ -14,6 +14,10 @@ app.use(
 );
 app.options('*', cors());
 
+app.get('/', (req, res) => {
+    return res.send('Welcome to the Scratch Bling API!');
+});
+
 app.get('/backscratchers', (req, res) => {
     if (req.query.id) {
         console.log("finding by id");
