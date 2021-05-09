@@ -1,6 +1,8 @@
+//initial imports
 const express = require('express');
 const app = express();
 var cors = require('cors');
+const db = require('./db/queries');
 
 app.use(
     cors({
@@ -11,18 +13,25 @@ app.use(
 app.options('*', cors());
 
 app.get('/backscratchers', (req, res) => {
-    return res.send('Received a GET HTTP method');
+    db.getAllBackscratchers()
+        .then((items) => {
+            return res.send(items);
+          })
+          .catch((err) => {
+            // handle errors
+            throw err;
+          });
 });
 
-app.post('/backscratchers', (req, res) => {
+app.post('/backscratchers', async (req, res) => {
     return res.send('Received a POST HTTP method');
 });
 
-app.put('/backscratchers', (req, res) => {
+app.put('/backscratchers', async (req, res) => {
     return res.send('Received a PUT HTTP method');
 });
 
-app.delete('/backscratchers', (req, res) => {
+app.delete('/backscratchers', async (req, res) => {
     return res.send('Received a DELETE HTTP method');
 });
 
