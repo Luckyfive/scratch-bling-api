@@ -18,32 +18,31 @@ app.get('/', (req, res) => {
     return res.send('Welcome to the Scratch Bling API!');
 });
 
+app.get('/backscratchers', (req, res) => {
+    console.log("gathering all records");
+    console.log(`select * from backscratchers`);
+    db.getAllBackscratchers()
+        .then((items) => {
+            return res.send(items);
+        })
+        .catch((err) => {
+            // handle errors
+            return res.status(400).send(err.message);
+        });
+});
+
 app.get('/backscratchers/:id', (req, res) => {
-    if (req.params.id) {
-        console.log("finding by id");
-        const id = parseInt(req.params.id);
-        console.log(`select * from backscratchers where id = ${id}`);
-        db.getBackscratcherById(id)
-            .then((item) => {
-                return res.send(item);
-            })
-            .catch((err) => {
-                // handle errors
-                return res.status(400).send(err.message);
-            });
-    }
-    else {
-        console.log("gathering all records");
-        console.log(`select * from backscratchers`);
-        db.getAllBackscratchers()
-            .then((items) => {
-                return res.send(items);
-            })
-            .catch((err) => {
-                // handle errors
-                return res.status(400).send(err.message);
-            });
-    }
+    console.log("finding by id");
+    const id = parseInt(req.params.id);
+    console.log(`select * from backscratchers where id = ${id}`);
+    db.getBackscratcherById(id)
+        .then((item) => {
+            return res.send(item);
+        })
+        .catch((err) => {
+            // handle errors
+            return res.status(400).send(err.message);
+        });
 });
 
 app.post('/backscratchers', (req, res) => {
