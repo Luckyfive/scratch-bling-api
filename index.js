@@ -37,6 +37,10 @@ app.get('/backscratchers/:id', (req, res) => {
     console.log(`select * from backscratchers where id = ${id}`);
     db.getBackscratcherById(id)
         .then((item) => {
+            if (!item) {
+                return res.send('Product id does not exist.');
+            }
+
             return res.send(item);
         })
         .catch((err) => {
@@ -86,6 +90,10 @@ app.put('/backscratchers/:id', async (req, res) => {
             item_size = array [${readableSizes}], item_cost = '${price}' where id = ${id} returning *`);
             db.updateBackscratcherById(id, name, description, readableSizes, price)
                 .then((item) => {
+                    if (!item) {
+                        return res.send('Product id does not exist.');
+                    }
+
                     return res.send({
                         "action": "updated",
                         ...item
