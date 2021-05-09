@@ -13,14 +13,29 @@ app.use(
 app.options('*', cors());
 
 app.get('/backscratchers', (req, res) => {
-    db.getAllBackscratchers()
-        .then((items) => {
-            return res.send(items);
-          })
-          .catch((err) => {
-            // handle errors
-            throw err;
-          });
+    if (req.query.id) {
+        console.log("finding by id")
+        const id = parseInt(req.query.id);
+        db.getBackscratcherById(id)
+            .then((item) => {
+                return res.send(item);
+            })
+            .catch((err) => {
+                // handle errors
+                throw err;
+            });
+    }
+    else {
+        console.log("gathering all records")
+        db.getAllBackscratchers()
+            .then((items) => {
+                return res.send(items);
+            })
+            .catch((err) => {
+                // handle errors
+                throw err;
+            });
+    }
 });
 
 app.post('/backscratchers', async (req, res) => {
