@@ -73,6 +73,7 @@ app.post('/backscratchers', (req, res) => {
     }
 });
 
+
 app.put('/backscratchers/:id', async (req, res) => {
     console.log("updating backscratcher");
     const id = parseInt(req.params.id);
@@ -80,24 +81,39 @@ app.put('/backscratchers/:id', async (req, res) => {
         return res.status(400).send('Unable to process update request. Product id must be provided.');
     }
     else {
-        const { name, description, price, sizes } = req.body;
-        if (!name || !description || !price || !sizes) {
-            return res.status(400).send('Unable to process update request. All product details must be provided.');
+        let { name, description, price, sizes } = req.body;
+        if (!name && !description && !price && !sizes) {
+            return res.status(400).send('Unable to process update request. At least one product detail must be provided.');
         }
         else {
-            let readableSizes = sizes.map(size => `'${size}'`);
-            console.log(`update backscratchers set item_name = '${name}', item_description = '${description}',
-            item_size = array [${readableSizes}], item_cost = '${price}' where id = ${id} returning *`);
-            db.updateBackscratcherById(id, name, description, readableSizes, price)
+            let currentItem;
+            db.getBackscratcherById(id)
                 .then((item) => {
                     if (!item) {
                         return res.send('Product id does not exist.');
                     }
+                    currentItem = item;
+                })
+                .then(() => {
+                    name = name || currentItem.item_name.replace("'", "''");
+                    description = description || currentItem.item_description.replace("'", "''");
+                    sizes = sizes || currentItem.item_size;
+                    price = price || currentItem.item_cost;
 
-                    return res.send({
-                        "action": "updated",
-                        ...item
-                    });
+                    let readableSizes = sizes.map(size => `'${size}'`);
+                    console.log(`update backscratchers set item_name = '${name}', item_description = '${description}',
+                        item_size = array [${readableSizes}], item_cost = '${price}' where id = ${id} returning *`);
+                    db.updateBackscratcherById(id, name, description, readableSizes, price)
+                        .then((item) => {
+                            if (!item) {
+                                return res.send('Product id does not exist.');
+                            }
+
+                            return res.send({
+                                "action": "updated",
+                                ...item
+                            });
+                        })
                 })
                 .catch((err) => {
                     // handle errors
